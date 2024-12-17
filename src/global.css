@@ -1,0 +1,35 @@
+@import "tailwindcss/base";
+
+@import "tailwindcss/components";
+
+@import "tailwindcss/utilities";
+
+/* scrollbar */
+@import 'simplebar-react/dist/simplebar.min.css';
+
+.ql-container {
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+/* Snow Theme */
+.ql-snow.ql-toolbar {
+  display: block;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.ql-toolbar .ql-snow {
+  border-width: 2px;
+  border: 1px !important;
+  border-color: #000000 !important;
+}
+
+.ql-editor {
+    min-height: 18em;
+  }
+
+  .react-hot-toast {
+        width: 14;
+        height: 14;
+    }

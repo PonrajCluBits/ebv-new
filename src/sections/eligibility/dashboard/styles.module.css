@@ -1,0 +1,88 @@
+.card{
+    width: 80px !important;
+    height: 120px !important;
+    margin-left: 0px;
+    padding: 2px 0px;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2) !important;
+    transition: transform 0.1s ease, opacity 0.3s ease;
+}
+.card:hover{
+    transform: scale(1.02);
+}
+
+
+.content{
+    display: block;
+    padding-top: 15px !important;
+}
+.number{/* 
+    font-family: 'lato' !important; */
+    font-weight: bold;
+    text-align: center;
+}
+
+.status{
+    font-weight: 800;
+    text-align: center;
+    padding-top: 8px;
+    font-size: 14px;
+}
+.chartContainer {
+    width: 100%;   /* Control the size of the chart */
+    height: 80%;  /* Ensure it fits well inside the card */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .value{
+    background-color: linear-gradient(to bottom right, lightblue, #87CEEB, #00BFFF);
+  }
+
+  /* Centering the loading button on the page */
+.loadingcontainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full screen height */
+    width: 100%; /* Full screen width */
+    background-color: #f4f4f4; /* Optional: Background color */
+  }
+  
+  /* Styling the loading button */
+  .loadingbutton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 25px 35px;
+    font-size: 22px;
+    font-weight: bold;
+    background-color: #fdfdfd; /* Green button */
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: not-allowed; /* Indicate that the button is disabled */
+    position: relative;
+  }
+  
+  /* Spinner inside the button */
+  .spinner {
+    border: 3px solid #f3f3f3; /* Light gray */
+    border-top: 5px solid #3498db; /* Blue color for spinner */
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin-right: 10px;
+  }
+  
+  /* Spinner animation */
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
