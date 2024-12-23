@@ -179,6 +179,22 @@ export const usePatientVerifyMutation = () => {
   );
 };
 
+export const usePatientBulkVerifyMutation = () => {
+
+  const queryClient = useQueryClient();
+
+  return useMutation((data) => EligibilityService.findAllPost(API_ENDPOINTS.BULK_VERIFY, data), {
+    onSuccess: (d) => {
+    },
+    onError: (error) => {
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(API_ENDPOINTS.BULK_VERIFY);
+    },
+  }
+  );
+};
+
 export const fetchVerifyPatientUtils = async (d) => {
   const { data } = await EligibilityService.findAllGet(API_ENDPOINTS.VERIFY_PATIENT_UTILS + d?.userId);
   return data;

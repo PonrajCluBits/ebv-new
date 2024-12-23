@@ -14,6 +14,12 @@ import { InsertDriveFile } from "@material-ui/icons";
 import { MoreVert } from "@material-ui/icons";
 import { VerifyPatient } from "./Verify";
 import VerificationWarningModal from "./verify-warning-model";
+import { usePatientBulkVerifyMutation, useVerifyPatientUtilsQuery } from "src/framework/rest/eligibility/eligibility.query";
+import { getUserId } from "src/utils/get-userId";
+import BulkVerificationWarningModal from "./bulk-verification-modal";
+import toast from "react-hot-toast";
+import { API_ENDPOINTS } from "src/utils/endpoints";
+import { useQueryClient } from "react-query";
 
 
 
@@ -412,6 +418,12 @@ const EligibilityTable = ({ data, isLoading }) => {
         page: 0,
     });
     const [verifyPatientModal, setVerifyPatientModal] = useState({data: null});
+    const [bulkVerifyOpen, setBulkVerifyOpen] = useState(false);
+
+    const queryClient = useQueryClient();
+
+    const toggleModalOpen = () => setBulkVerifyOpen(true);
+    const toggleModalClose = () => setBulkVerifyOpen(false);
 
 
     const navigate = useNavigate();
@@ -447,12 +459,6 @@ const EligibilityTable = ({ data, isLoading }) => {
                 const handleDownload = () => {
                   console.log("Downloading PDF for uniqueId:", row.uniqueId);
                   // Add your download logic here
-                  handleClose();
-                };
-          
-                const handleVerify = () => {
-                  console.log("Verifying patient:", row);
-                  // Add your verification logic here
                   handleClose();
                 };
           
@@ -509,6 +515,52 @@ const EligibilityTable = ({ data, isLoading }) => {
         const selectedRows = rowsWithIds.filter((row) => selectionModel.includes(row.id));
         setSelectedRowsData(selectedRows);
     };
+
+    const { mutate: bulkVerify} = usePatientBulkVerifyMutation()
+    const { data: verifypatientUtils } = useVerifyPatientUtilsQuery({ userId: getUserId() });
+
+    const handleBulkVerify = async() => {
+
+        const verifiedPatients = selectedRows.filter(
+            (data) =>
+              data.lastVerified &&
+              new Date().getTime() <
+                new Date(
+                  new Date().setFullYear(
+                    new Date(data.lastVerified).getFullYear(),
+                    new Date(data.lastVerified).getMonth(),
+                    new Date(data.lastVerified).getDate() +
+                      verifypatientUtils?.data?.warningdays
+                  )
+                ).getTime()
+          );
+
+        if (verifiedPatients.length >= 0) {
+            toggleModalOpen();
+        } else {
+          try {
+            bulkVerify({
+              ids: verifiedPatients.map((data) => ({
+                uniqueId: data.uniqueId,
+                isScheduled: data.isScheduled,
+                adminId: getUserId(),
+              })),
+            },{
+                onSuccess: async (v) => {
+                    toast.success("Patients verified Successfully", { duration: 3000 });
+                    queryClient.refetchQueries(API_ENDPOINTS.PATIENT_LIST);
+                },
+                onError : (error) => {
+                  console.log(error, "ERROR")
+                  toast.error("Patient verification failed!", { duration: 3000 });
+                },
+              });            
+          } catch (error) {
+            toast.error("Patient verification failed!");
+            console.log(error);
+          }
+        }
+      };
 
 
     const CustomToolbar = () => {
@@ -568,7 +620,7 @@ const EligibilityTable = ({ data, isLoading }) => {
                             >
                                 <MenuItem onClick={handleClose}>CSV</MenuItem>
                                 <MenuItem onClick={handleClose}>PDF</MenuItem>
-                                <MenuItem onClick={handleClose}>Verify Now</MenuItem>
+                                <MenuItem onClick={handleBulkVerify}>Verify Now</MenuItem>
                                 <MenuItem onClick={handleClose}>Exclude</MenuItem>
                             </Menu>
                         </div>
@@ -584,7 +636,6 @@ const EligibilityTable = ({ data, isLoading }) => {
             </Box>
         )
     }
-console.log(verifyPatientModal)
 
     return (
         <Box>
@@ -597,6 +648,9 @@ console.log(verifyPatientModal)
             open={verifyPatientModal?.data ? true : false}
           />
         )}
+        { bulkVerifyOpen &&
+            <BulkVerificationWarningModal open={bulkVerifyOpen} handleClose={toggleModalClose} state={selectedRows}/>
+        }
             <Grid container spacing={6} sx={{}}>
                 <Grid item xs={12}>
                     <Card>

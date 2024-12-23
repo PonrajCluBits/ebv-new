@@ -17,6 +17,7 @@ export const LoginPage = lazy(() => import('src/pages/login'));
 export const EligibilityPage = lazy(() => import('src/pages/eligibilityPage'));
 export const PatientBenefitPage = lazy(() => import('src/pages/eligibilityPage/patientBenefitPage'));
 export const PatientBenefitReportPage = lazy(() => import('src/pages/eligibilityPage/patientBenefitPage/report'));
+export const ChatbotComponent = lazy(() => import('src/pages/chatBot'));
 // eslint-disable-next-line import/no-unresolved
 
 export default function Router() {
@@ -47,6 +48,10 @@ export default function Router() {
             {
               path: 'eligibility-verification/patient-benefit-information/report/:param',
               element: <PatientBenefitReportPage />,
+            },
+            {
+              path: '/chatBot',
+              element: <ChatbotComponent />,
             },
             {
               path: '/eligibility-history',

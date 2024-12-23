@@ -12,5 +12,6 @@ export const API_ENDPOINTS = {
     PATIENT_DETAIL : '/patients/benifit/details',
     GET_BASIC_REPORT : '/eligibility/getreport',
     PATIENT_VERIFY : '/patients/verifypatient',
-    VERIFY_PATIENT_UTILS : '/generalSettings/get/'
+    VERIFY_PATIENT_UTILS : '/generalSettings/get/',
+    BULK_VERIFY : '/patients/bulkverify'
 }
